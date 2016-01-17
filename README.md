@@ -1,0 +1,2 @@
+# betscraper
+Collecting betting information
