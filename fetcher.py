@@ -16,7 +16,7 @@ def getContentFromURL(url):
         return
 
     html = page.read()
-    return html
+    return html, page.getcode()
 
 def saveHTMLToLocal(url, filename):
     content  = getContentFromURL(url)
@@ -52,10 +52,7 @@ def createSoups(html):
 
 
 
-obj = createSoups(useLocalHTMLFile())
 
-headersoup = obj[0]
-tablesoup = obj[1]
 
 def getEventTitle(headerSoup):
     if(len(headersoup.find_all('a'))==1):
@@ -64,5 +61,19 @@ def getEventTitle(headerSoup):
     else:
         print 'Incorrect amount of header title found'
 
+obj = createSoups(useLocalHTMLFile())
+
+headersoup = obj[0]
+tablesoup = obj[1]
 
 print getEventTitle(headersoup)
+
+
+def getBettingSites():
+    return
+
+def getMatches():
+    return
+
+
+
