@@ -23,6 +23,19 @@ class MyTestCase(unittest.TestCase):
         print 'here comes header'
         self.assertTrue ('UFC' in headersoup.find("div", { "class" : "table-header" }).find('a').contents[0])
 
+    def testheaderparsingofSites(self):
+        obj = fetcher.createSoups(fetcher.useLocalHTMLFile())
+        tablesoup = obj[1]
+        self.assertEqual('5Dimes' , fetcher.getSiteFromHeader('5Dim',tablesoup)[0])
+
+    def testFightFetching(self):
+        obj = fetcher.createSoups(fetcher.useLocalHTMLFile())
+        tablesoup = obj[1]
+        matches = fetcher.getfights(1, tablesoup)
+        self.assertEqual('Donald Cerrone', matches[0].fighterOneName)
+        self.assertEqual('+150', matches[0].fighterOneLine)
+        self.assertEqual('Rafael Dos Anjos', matches[0].fighterTwoName)
+        self.assertEqual('-170', matches[0].fighterTwoLine)
 
 
 

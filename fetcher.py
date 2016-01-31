@@ -1,7 +1,10 @@
-
+from Objects import *
 import urllib2
 from bs4 import BeautifulSoup
 # Used for fetching the page content
+
+
+
 
 def useLocalHTMLFile():
 
@@ -38,7 +41,8 @@ def getEventName(headerSoup):
 def createSoups(html):
     soup = BeautifulSoup(html,"html.parser")
     header =  soup.find("div", { "class" : "table-header" })
-    body =  soup.find("table", { "class" : "odds-table" })
+    body =  soup.findAll(lambda tag: tag.name == 'table' and tag.get('class') == ['odds-table'])
+
 
     headerSoup = BeautifulSoup(str(header),"html.parser")
     tableSoup = BeautifulSoup(str(body),"html.parser")
@@ -66,14 +70,59 @@ obj = createSoups(useLocalHTMLFile())
 headersoup = obj[0]
 tablesoup = obj[1]
 
-print getEventTitle(headersoup)
+#print getEventTitle(headersoup)
+
+# Returns name of the site and the table index position
+def getSiteFromHeader(siteName, tablesoup):
+
+    headers = tablesoup.find('thead').findAll('th')
+
+    bettinSites = []
+
+    for h in headers:
+
+        if h.find('a') != None:
+            bettinSites.append( h.find('a').contents[0])
+        else:
+            bettinSites.append('Empty')
+
+    for site in bettinSites:
+        if siteName in site:
+            return site, bettinSites.index(site)
+    return None
 
 
-def getBettingSites():
-    return
+def getfights(siteIndex, tablesoup):
+
+    fights = []
+    tablerowseven = tablesoup.find('tbody').findAll('tr', {'class' : 'even' })
+    tablerowsodd= tablesoup.find('tbody').findAll('tr', {'class' : 'odd' })
+
+
+    fighterOne =''
+    lineOne = 0
+    fighterTwo = ''
+    lineTwo = 0
+#TODO: Make flexible to get other bettin lines
+    for i in range(len(tablerowseven)):
+        if tablerowseven[i].find('th').find('a').find('span') is not None:
+            fighterOne = tablerowseven[i].find('th').find('a').find('span').contents[0]
+            lineOne = tablerowseven[i].find('td').find('a').find('span').find('span').contents[0]
+        if tablerowsodd[i].find('th').find('a').find('span') is not None:
+           fighterTwo = tablerowsodd[i].find('th').find('a').find('span').contents[0]
+           lineTwo = tablerowsodd[i].find('td').find('a').find('span').find('span').contents[0]
+
+        fights.append(Match(fighterOne, fighterTwo, lineOne, lineTwo))
+
+
+        #print tablerow.find('th').find('a').find('span').contents[0]
+
+    return fights
+
+
+
 
 def getMatches():
     return
-
 
 
