@@ -120,9 +120,18 @@ def getfights(siteIndex, tablesoup):
     return fights
 
 
+def convertToOdds(line):
+
+    symbol = line[:1]
+
+    number = float(line[1:])
+
+    if('+' in symbol):
+        return number/100 + 1
+    elif('-' in symbol):
+        return float("{0:.2f}".format(100/number + 1))
 
 
-def getMatches():
-    return
-
+    else:
+        return None
 

@@ -38,7 +38,10 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual('-170', matches[0].fighterTwoLine)
 
 
+    def testLineConverter(self):
 
+        self.assertEqual(2.50, fetcher.convertToOdds('+150'))
+        self.assertEqual(1.59, fetcher.convertToOdds('-170'))
 
 if __name__ == '__main__':
     unittest.main()
