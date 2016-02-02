@@ -1,6 +1,8 @@
 from Objects import *
 import urllib2
 from bs4 import BeautifulSoup
+import re
+import datetime
 # Used for fetching the page content
 
 
@@ -53,15 +55,47 @@ def createSoups(html):
 
     return headerSoup,tableSoup,soup
 
+ # returns the winne of a fight
+def getWinner(fighterOneName, fighterTwoName, Event):
+    None
+
+def getCorrectUFCEvent(eventname):
+
+    refSite = 'https://en.wikipedia.org/wiki/List_of_UFC_events'
+
+#Convert from string to datetime object
+
+
+def convertMmaDateToWikiDate(datestring):
+
+    month = datestring[:3]
+
+    monthsList = ['jan','feb','mar','apr','may','jun','jul','aug','oct','nov','des']
+    month = month.lower()
+    pos = None
+    for i in range(len(monthsList)):
+        if(monthsList[i] in month):
+            pos = i+1
+
+    if not (pos):
+        print ' Error when finding month in string %s'%(datestring)
+        return None
+
+    day = re.search('\D\d\d\D',datestring).group()
+    day = re.search('\d\d',day).group()
+    year = re.search('\d\d\d\d',datestring).group()
+
+    return datetime.date(int(year),int(pos),int(day))
+
+    # TODO:Split on space, keep first three letters. keep next number, prob by regex.
 
 
 
-
-
-def getEventTitle(headerSoup):
+def getEventTitleAndDate(headerSoup):
     if(len(headersoup.find_all('a'))==1):
+        date = headersoup.find('span', {'class':'table-header-date'}).contents[0]
 
-        return headersoup.find_all('a')[0].text
+        return headersoup.find_all('a')[0].text,date
     else:
         print 'Incorrect amount of header title found'
 
@@ -70,9 +104,9 @@ obj = createSoups(useLocalHTMLFile())
 headersoup = obj[0]
 tablesoup = obj[1]
 
-#print getEventTitle(headersoup)
+print getEventTitleAndDate(headersoup)
 
-# Returns name of the site and the table index position
+# Returns name of the betting site and the table index position
 def getSiteFromHeader(siteName, tablesoup):
 
     headers = tablesoup.find('thead').findAll('th')
@@ -112,7 +146,7 @@ def getfights(siteIndex, tablesoup):
            fighterTwo = tablerowsodd[i].find('th').find('a').find('span').contents[0]
            lineTwo = tablerowsodd[i].find('td').find('a').find('span').find('span').contents[0]
 
-        fights.append(Match(fighterOne, fighterTwo, lineOne, lineTwo))
+        fights.append(Match(fighterOne, fighterTwo, convertToOdds(lineOne), convertToOdds(lineTwo)))
 
 
         #print tablerow.find('th').find('a').find('span').contents[0]

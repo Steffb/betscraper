@@ -2,6 +2,7 @@ __author__ = 'steffenfb'
 
 import unittest
 import fetcher
+import datetime
 
 class MyTestCase(unittest.TestCase):
 
@@ -33,15 +34,37 @@ class MyTestCase(unittest.TestCase):
         tablesoup = obj[1]
         matches = fetcher.getfights(1, tablesoup)
         self.assertEqual('Donald Cerrone', matches[0].fighterOneName)
-        self.assertEqual('+150', matches[0].fighterOneLine)
+        self.assertEqual(2.50, matches[0].fighterOneLine)
         self.assertEqual('Rafael Dos Anjos', matches[0].fighterTwoName)
-        self.assertEqual('-170', matches[0].fighterTwoLine)
+        self.assertEqual(1.59, matches[0].fighterTwoLine)
 
 
     def testLineConverter(self):
 
         self.assertEqual(2.50, fetcher.convertToOdds('+150'))
         self.assertEqual(1.59, fetcher.convertToOdds('-170'))
+
+    def testWinnerOfEvent(self):
+        None
+
+    def testGetCorrectUFCEvent(self):
+
+        fetcher.getCorrectUFCEvent()
+
+    def testConvertDateformat(self):
+        self.assertEqual('Des 11', fetcher.convertMmaDateToWikiDate('December 11th'))
+
+    def testDateToWikiDateConvertions(self):
+        self.assertEqual(datetime.date(2010,8,28), fetcher.convertMmaDateToWikiDate('Aug 28, 2010'))
+        self.assertEqual(datetime.date(2010,8,28), fetcher.convertMmaDateToWikiDate('Aug 28th 2010'))
+
+        #self.assertEqual('Jan 1', fetcher.convertMmaDateToWikiDate('January 1st'))
+        #self.assertEqual('Jan 1', fetcher.convertMmaDateToWikiDate('January 1'))
+        #self.assertNotEqual('Jan 1', fetcher.convertMmaDateToWikiDate('January 12th'))
+#Convert from
+# January 17th
+#Jan 17, 2016
+
 
 if __name__ == '__main__':
     unittest.main()
