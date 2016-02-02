@@ -58,9 +58,9 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(datetime.date(2010,8,28), fetcher.convertMmaDateToWikiDate('Aug 28, 2010'))
         self.assertEqual(datetime.date(2010,8,28), fetcher.convertMmaDateToWikiDate('Aug 28th 2010'))
 
-        #self.assertEqual('Jan 1', fetcher.convertMmaDateToWikiDate('January 1st'))
-        #self.assertEqual('Jan 1', fetcher.convertMmaDateToWikiDate('January 1'))
-        #self.assertNotEqual('Jan 1', fetcher.convertMmaDateToWikiDate('January 12th'))
+        self.assertEqual(datetime.date(2009,12,12), fetcher.convertMmaDateToWikiDate('Dec 12th 2009	'))
+        self.assertEqual(datetime.date(2009,1,31), fetcher.convertMmaDateToWikiDate('Jan 31st 2009'))
+        self.assertEqual(datetime.date(2013,2,2), fetcher.convertMmaDateToWikiDate('Feb 2nd 2013'))
 #Convert from
 # January 17th
 #Jan 17, 2016

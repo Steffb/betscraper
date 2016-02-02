@@ -70,7 +70,7 @@ def convertMmaDateToWikiDate(datestring):
 
     month = datestring[:3]
 
-    monthsList = ['jan','feb','mar','apr','may','jun','jul','aug','oct','nov','des']
+    monthsList = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec']
     month = month.lower()
     pos = None
     for i in range(len(monthsList)):
@@ -81,8 +81,13 @@ def convertMmaDateToWikiDate(datestring):
         print ' Error when finding month in string %s'%(datestring)
         return None
 
-    day = re.search('\D\d\d\D',datestring).group()
-    day = re.search('\d\d',day).group()
+    day = re.search('\D\d\d\D|\D\d\D',datestring).group()
+    if(len(day) is 3):
+        day = re.search('\d',day).group()
+    else:
+        day = re.search('\d\d',day).group()
+
+
     year = re.search('\d\d\d\d',datestring).group()
 
     return datetime.date(int(year),int(pos),int(day))
