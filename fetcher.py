@@ -3,6 +3,7 @@ import urllib2
 from bs4 import BeautifulSoup
 import re
 import datetime
+import misc
 # Used for fetching the page content
 
 
@@ -49,7 +50,6 @@ def createSoups(html):
     headerSoup = BeautifulSoup(str(header),"html.parser")
     tableSoup = BeautifulSoup(str(body),"html.parser")
 
-    headerSoup.find('a').string
 
 
 
@@ -104,12 +104,12 @@ def getEventTitleAndDate(headerSoup):
     else:
         print 'Incorrect amount of header title found'
 
-obj = createSoups(useLocalHTMLFile())
+#obj = createSoups(useLocalHTMLFile())
 
-headersoup = obj[0]
-tablesoup = obj[1]
+#headersoup = obj[0]
+#tablesoup = obj[1]
 
-print getEventTitleAndDate(headersoup)
+#print getEventTitleAndDate(headersoup)
 
 # Returns name of the betting site and the table index position
 def getSiteFromHeader(siteName, tablesoup):
@@ -174,3 +174,30 @@ def convertToOdds(line):
     else:
         return None
 
+
+def getWikiFightByName(name):
+
+    url = 'https://en.wikipedia.org/wiki/List_of_UFC_events'
+    wikiSoup = createSoups( getContentFromURL(url)[0])[2]
+
+
+    tables = wikiSoup.findAll('table', {'class': 'sortable wikitable succession-box'})
+    upcomingEventTable = tables[0]
+    pastEventTable = tables[1]
+
+    pastBody = pastEventTable.findAll('tr')
+
+
+
+    for row in pastBody:
+        fields = row.findAll('td')
+        if len(fields)>2:
+            name = fields[1].find('a').contents[0]
+            link = fields[1].find('a')['href']
+            date = fields[2]
+
+            print 'Name %s \t url %s'%(name,link)
+    #table = misc.findElementByClass(wikiSoup,'table','sortable wikitable succession-box')
+
+
+getWikiFightByName('UFC on Fox: Johnson vs. Bader')
