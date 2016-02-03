@@ -61,6 +61,29 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(datetime.date(2009,12,12), fetcher.convertMmaDateToWikiDate('Dec 12th 2009	'))
         self.assertEqual(datetime.date(2009,1,31), fetcher.convertMmaDateToWikiDate('Jan 31st 2009'))
         self.assertEqual(datetime.date(2013,2,2), fetcher.convertMmaDateToWikiDate('Feb 2nd 2013'))
+
+    def testGetWikiEvents(self):
+        events = fetcher.getWikiFightByName()
+
+        self.assertEqual('UFC on Fox: Johnson vs. Bader',fetcher.findEventByName('UFC on Fox: Johnson vs. Bader', events).name)
+
+        self.assertEqual('/wiki/UFC_on_Fox:_Johnson_vs._Bader', events[0].site)
+        self.assertEqual(datetime.date(2016,1,30), events[0].date)
+        self.assertEqual('UFC on Fox: Johnson vs. Bader', events[0].name)
+
+
+    def testGetFightsByUrl(self):
+        fights = fetcher.getWikiFightResults('https://en.wikipedia.org/wiki/UFC_on_Fox:_Johnson_vs._Bader')
+
+        self.assertEqual('Anthony Johnson',fights[0].winner)
+
+        self.assertEqual('Ryan Bader',fights[0].loser)
+
+
+
+
+
+
 #Convert from
 # January 17th
 #Jan 17, 2016

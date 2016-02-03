@@ -6,7 +6,7 @@ import datetime
 import misc
 # Used for fetching the page content
 
-
+from difflib import SequenceMatcher
 
 
 def useLocalHTMLFile():
@@ -59,9 +59,7 @@ def createSoups(html):
 def getWinner(fighterOneName, fighterTwoName, Event):
     None
 
-def getCorrectUFCEvent(eventname):
 
-    refSite = 'https://en.wikipedia.org/wiki/List_of_UFC_events'
 
 #Convert from string to datetime object
 
@@ -131,6 +129,8 @@ def getSiteFromHeader(siteName, tablesoup):
     return None
 
 
+
+#From bestfigh odds.com
 def getfights(siteIndex, tablesoup):
 
     fights = []
@@ -175,7 +175,9 @@ def convertToOdds(line):
         return None
 
 
-def getWikiFightByName(name):
+def getWikiFightByName():
+
+    events = []
 
     url = 'https://en.wikipedia.org/wiki/List_of_UFC_events'
     wikiSoup = createSoups( getContentFromURL(url)[0])[2]
@@ -192,12 +194,57 @@ def getWikiFightByName(name):
     for row in pastBody:
         fields = row.findAll('td')
         if len(fields)>2:
+            link = 'https://en.wikipedia.org'
             name = fields[1].find('a').contents[0]
             link = fields[1].find('a')['href']
-            date = fields[2]
+            date = convertMmaDateToWikiDate(fields[2].find('span',{'style':'white-space:nowrap'}).contents[0])
 
-            print 'Name %s \t url %s'%(name,link)
+            events.append(Event(link,name,date))
+
+    return events
+
+    # Compares the name to event name on wikiSite
+def findEventByName(name, events):
+    ratio = -1
+    bestEvent = None
+    for event in events:
+
+        if (event.name is name):
+            return event
+
+        seq=SequenceMatcher(a=name.lower(), b=event.name.lower())
+        if(ratio < seq.ratio()):
+            ratio = seq.ratio()
+            bestEvent = event
+
+        #print 'checking |%s| \t vs \t |%s| similarity %d'%(name,event.name,ratio)
+
+    return bestEvent
+
     #table = misc.findElementByClass(wikiSoup,'table','sortable wikitable succession-box')
 
 
-getWikiFightByName('UFC on Fox: Johnson vs. Bader')
+def getWikiFightResults(url):
+    soup = createSoups(getContentFromURL(url)[0])[2]
+
+    fights = []
+
+    table = soup.find('table',{'class':'toccolours'})
+
+    tablerows = table.findAll('tr')
+
+    for row in  tablerows:
+        fields = row.findAll()
+        if (len(fields)> 3 ):
+
+
+            winner = fields[1]
+            loser = fields[3]
+
+            fights.append(WinnerLoser(winner,loser))
+
+    return fights
+
+
+getWikiFightByName()
+
