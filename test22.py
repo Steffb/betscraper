@@ -1,8 +1,11 @@
+from Objects import WinnerLoser
+
 __author__ = 'steffenfb'
 
 import unittest
 import fetcher
 import datetime
+from Objects import *
 
 class MyTestCase(unittest.TestCase):
 
@@ -47,12 +50,9 @@ class MyTestCase(unittest.TestCase):
     def testWinnerOfEvent(self):
         None
 
-    def testGetCorrectUFCEvent(self):
 
-        fetcher.getCorrectUFCEvent()
 
-    def testConvertDateformat(self):
-        self.assertEqual('Des 11', fetcher.convertMmaDateToWikiDate('December 11th'))
+
 
     def testDateToWikiDateConvertions(self):
         self.assertEqual(datetime.date(2010,8,28), fetcher.convertMmaDateToWikiDate('Aug 28, 2010'))
@@ -72,6 +72,12 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual('UFC on Fox: Johnson vs. Bader', events[0].name)
 
 
+    def testWinnerLoserFindByName(self):
+        wl = WinnerLoser('winnerName', 'LoserName')
+        self.assertEqual('winnerName', wl.findByNames('winnerName'))
+
+        self.assertEqual('LoserName', wl.findByNames('LoserName'))
+        
     def testGetFightsByUrl(self):
         fights = fetcher.getWikiFightResults('https://en.wikipedia.org/wiki/UFC_on_Fox:_Johnson_vs._Bader')
 
@@ -79,6 +85,17 @@ class MyTestCase(unittest.TestCase):
 
         self.assertEqual('Ryan Bader',fights[0].loser)
 
+
+
+    def testGetEventpageByName(self):
+
+        eventPage = fetcher.getEventPageFromName('UFC Fight Night: Dillashaw vs. Cruz')
+
+        eventName = eventPage[0]
+        eventUrl = eventPage[1]
+        self.assertEqual('UFC FIGHT NIGHT 81: DILLASHAW VS. CRUZ',eventName.upper())
+
+        self.assertEqual('/events/ufc-fight-night-81-dillashaw-vs-cruz-1022',eventUrl)
 
 
 

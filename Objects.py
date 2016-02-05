@@ -37,4 +37,15 @@ class WinnerLoser(object):
         self.winner = winner
         self.loser = loser
     #TODO:Find the correct figther
-    def findByNames(self, first):
+
+    def findByNames(self, name):
+
+        if (name in self.winner):
+            return self.winner
+        elif (name in self.loser):
+            return self.loser
+
+        else:
+            print 'No name match on |%s| in find by names'%(name)
+            return None
+

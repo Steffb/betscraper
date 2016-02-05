@@ -3,6 +3,7 @@ import urllib2
 from bs4 import BeautifulSoup
 import re
 import datetime
+import urllib
 import misc
 # Used for fetching the page content
 
@@ -42,6 +43,9 @@ def getEventName(headerSoup):
 
     #Returns the table header, the table and the whole soup
 def createSoups(html):
+    if (html is None):
+        print 'No html in createsoups'
+        return None
     soup = BeautifulSoup(html,"html.parser")
     header =  soup.find("div", { "class" : "table-header" })
     body =  soup.findAll(lambda tag: tag.name == 'table' and tag.get('class') == ['odds-table'])
@@ -63,7 +67,7 @@ def getWinner(fighterOneName, fighterTwoName, Event):
 
 #Convert from string to datetime object
 
-
+#Not currently used
 def convertMmaDateToWikiDate(datestring):
 
     month = datestring[:3]
@@ -94,7 +98,7 @@ def convertMmaDateToWikiDate(datestring):
 
 
 
-def getEventTitleAndDate(headerSoup):
+def getEventTitleAndDate(headersoup):
     if(len(headersoup.find_all('a'))==1):
         date = headersoup.find('span', {'class':'table-header-date'}).contents[0]
 
@@ -204,6 +208,7 @@ def getWikiFightByName():
     return events
 
     # Compares the name to event name on wikiSite
+
 def findEventByName(name, events):
     ratio = -1
     bestEvent = None
@@ -234,17 +239,57 @@ def getWikiFightResults(url):
     tablerows = table.findAll('tr')
 
     for row in  tablerows:
-        fields = row.findAll()
+        fields = row.findAll('td')
         if (len(fields)> 3 ):
 
+            if(len(fields[1].contents) is 0 or len(fields[3].contents) is 0):
+                continue
 
-            winner = fields[1]
-            loser = fields[3]
+            winner = fields[1].text
+            loser = fields[3].text
+
+
+
 
             fights.append(WinnerLoser(winner,loser))
 
     return fights
 
+#Assumes that the first event hit on search is the correct one
+def getEventPageFromName(eventName):
+    query = urllib.quote_plus(eventName)
+    url = 'http://www.bestfightodds.com/search?query='
+    url+=query
+    #print 'current url is :%s'%(url)
+    content = getContentFromURL(url)[0]
+    soup = createSoups(content)[2]
+    tables = soup.findAll('table',{'class':'content-list'})
+    table = None
+    # Find event table
+    for t in tables:
 
-getWikiFightByName()
+        if(len(t.find('td',{'class':'content-list-date'}).contents) is not 0):
+
+            table = t
+            break
+    if(table is None):
+        print 'Did not find table '
+        return None
+    firstRow = table.find('tr')
+    rowParts = firstRow.findAll('td')
+    link = rowParts[1].find('a')
+    url = link['href']
+    name = link.contents[0]
+
+
+    return name,url
+
+
+def getEventDataByName(eventName):
+
+    #getContentFromURL('www.bestfightodds.com'+getEventPageFromName(eventName)[1])
+    return None
+
+
+#getWikiFightByName()
 
