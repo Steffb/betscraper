@@ -228,6 +228,9 @@ def findEventByName(name, events):
 
     #table = misc.findElementByClass(wikiSoup,'table','sortable wikitable succession-box')
 
+def compareStringSimilarity(stringOne, stringTwo):
+    seq=SequenceMatcher(a=stringOne.lower(), b=stringTwo.lower())
+    return seq.ratio()
 
 def getWikiFightResults(url):
     soup = createSoups(getContentFromURL(url)[0])[2]

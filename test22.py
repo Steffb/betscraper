@@ -98,7 +98,12 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual('/events/ufc-fight-night-81-dillashaw-vs-cruz-1022',eventUrl)
 
 
+    def testEventMatching(self):
+        events = fetcher.getWikiFightByName()
 
+        for event in events:
+
+            print '%s \t matched with %s'%(event.name,fetcher.getEventPageFromName(event.name)[0])
 
 
 #Convert from
