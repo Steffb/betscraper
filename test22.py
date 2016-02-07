@@ -97,18 +97,71 @@ class MyTestCase(unittest.TestCase):
 
         self.assertEqual('/events/ufc-fight-night-81-dillashaw-vs-cruz-1022',eventUrl)
 
-
+    @unittest.skip
     def testEventMatching(self):
         events = fetcher.getWikiFightByName()
 
         for event in events:
 
-            print '%s \t matched with %s'%(event.name,fetcher.getEventPageFromName(event.name)[0])
+            eventname = event.name.encode('utf-8')
+            fetchedEvent = fetcher.getEventPageFromName(eventname)[0].encode('utf-8')
+            ratio = fetcher.compareStringSimilarity(eventname, fetchedEvent)
 
+            if(ratio< 0.9):
+                print eventname+" |\t | "+fetchedEvent+'|\t ratio:'+str(ratio)
+            #print '%s \t matched with %s \t %s'%(,fetcher.compareStringSimilarity(event.name, fetcher.getEventPageFromName(eventname)[0]))
+
+    @unittest.skip
+    def testUnicode(self):
+        events = fetcher.getWikiFightByName()
+
+
+        for e in events:
+
+            if('illa'.decode() in e.name ):
+                print e.name
+
+
+
+    def testCompareString(self):
+        ratio  = fetcher.compareStringSimilarity('hello','hello')
+
+        self.assertEqual(1,ratio)
 
 #Convert from
 # January 17th
 #Jan 17, 2016
+
+    def testCreateEvent(self):
+
+        events = fetcher.getWikiFightByName()
+        event =  events[0]
+        wlobjs = fetcher.getWikiFightResults(event.site)
+        #url = fetcher.getEventPageFromName(event.name)
+        data =fetcher.getEventDataByName(event.name)
+        result = fetcher.joinResultAndLines(data,wlobjs)
+
+        self.assertEqual('Stephen Thompson',result[0].fightWinnerWinner)
+        self.assertEqual(1.34,result[0].fighterOneLine)
+        self.assertEqual(3.45,result[0].fighterTwoLine)
+
+
+
+
+
+    def testGetEventLines(self):
+        matches = fetcher.getEventDataByName('UFC 190: Rousey vs. Correia')
+        m1 = matches[0]
+        self.assertEqual('Bethe Correia',m1.fighterOneName)
+        self.assertEqual('Ronda Rousey',m1.fighterTwoName)
+        self.assertEqual(12 ,m1.fighterOneLine)
+        self.assertEqual(1.06 ,m1.fighterTwoLine)
+        m1 = matches[-1]
+        self.assertEqual('Guido Cannetti',m1.fighterOneName)
+        self.assertEqual('Hugo Viana',m1.fighterTwoName)
+        self.assertEqual(5.5 ,m1.fighterOneLine)
+        self.assertEqual(1.17 ,m1.fighterTwoLine)
+
 
 
 if __name__ == '__main__':

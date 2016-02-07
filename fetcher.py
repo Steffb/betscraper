@@ -6,6 +6,7 @@ import datetime
 import urllib
 import misc
 # Used for fetching the page content
+import cPickle as pickle
 
 from difflib import SequenceMatcher
 
@@ -49,13 +50,8 @@ def createSoups(html):
     soup = BeautifulSoup(html,"html.parser")
     header =  soup.find("div", { "class" : "table-header" })
     body =  soup.findAll(lambda tag: tag.name == 'table' and tag.get('class') == ['odds-table'])
-
-
     headerSoup = BeautifulSoup(str(header),"html.parser")
     tableSoup = BeautifulSoup(str(body),"html.parser")
-
-
-
 
     return headerSoup,tableSoup,soup
 
@@ -200,7 +196,7 @@ def getWikiFightByName():
         if len(fields)>2:
             link = 'https://en.wikipedia.org'
             name = fields[1].find('a').contents[0]
-            link = fields[1].find('a')['href']
+            link += fields[1].find('a')['href']
             date = convertMmaDateToWikiDate(fields[2].find('span',{'style':'white-space:nowrap'}).contents[0])
 
             events.append(Event(link,name,date))
@@ -290,9 +286,32 @@ def getEventPageFromName(eventName):
 
 def getEventDataByName(eventName):
 
-    #getContentFromURL('www.bestfightodds.com'+getEventPageFromName(eventName)[1])
-    return None
+    content = getContentFromURL('http://www.bestfightodds.com'+getEventPageFromName(eventName)[1])[0]
+    tablesoup = createSoups(content)[1]
+    fights =getfights(0,tablesoup)
+    return fights
+
+def dumpEventTableToFile():
+    table = getWikiFightByName()[0]
+
+    pickle.dump(table,open('table.p','wb'))
+
+def fetchEvenTableFromFile():
+     return pickle.load( open( "table.p", "rb" ) )
 
 
-#getWikiFightByName()
+def joinResultAndLines(fights, winnerLoser):
 
+    for f in fights:
+
+        for wl in winnerLoser:
+
+            if(f.fighterOneName in wl.winner or f.fighterOneName in wl.loser ):
+
+                if(f.fighterTwoName in wl.winner or f.fighterTwoName in wl.loser ):
+
+                    f.fightWinnerWinner = wl.winner
+
+
+    return fights
+#dumpEventTableToFile()
