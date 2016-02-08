@@ -6,8 +6,7 @@ import datetime
 import urllib
 import misc
 # Used for fetching the page content
-import cPickle as pickle
-
+import sqlite3
 from difflib import SequenceMatcher
 
 
@@ -132,29 +131,31 @@ def getSiteFromHeader(siteName, tablesoup):
 
 #From bestfigh odds.com
 def getfights(siteIndex, tablesoup):
-
-    fights = []
-    tablerowseven = tablesoup.find('tbody').findAll('tr', {'class' : 'even' })
-    tablerowsodd= tablesoup.find('tbody').findAll('tr', {'class' : 'odd' })
-
-
-    fighterOne =''
-    lineOne = 0
-    fighterTwo = ''
-    lineTwo = 0
-#TODO: Make flexible to get other bettin lines
-    for i in range(len(tablerowseven)):
-        if tablerowseven[i].find('th').find('a').find('span') is not None:
-            fighterOne = tablerowseven[i].find('th').find('a').find('span').contents[0]
-            lineOne = tablerowseven[i].find('td').find('a').find('span').find('span').contents[0]
-        if tablerowsodd[i].find('th').find('a').find('span') is not None:
-           fighterTwo = tablerowsodd[i].find('th').find('a').find('span').contents[0]
-           lineTwo = tablerowsodd[i].find('td').find('a').find('span').find('span').contents[0]
-
-        fights.append(Match(fighterOne, fighterTwo, convertToOdds(lineOne), convertToOdds(lineTwo)))
+    try:
+        fights = []
+        tablerowseven = tablesoup.find('tbody').findAll('tr', {'class' : 'even' })
+        tablerowsodd= tablesoup.find('tbody').findAll('tr', {'class' : 'odd' })
 
 
-        #print tablerow.find('th').find('a').find('span').contents[0]
+        fighterOne =''
+        lineOne = 0
+        fighterTwo = ''
+        lineTwo = 0
+        #TODO: Make flexible to get other bettin lines
+        for i in range(len(tablerowseven)):
+            if tablerowseven[i].find('th').find('a').find('span') is not None:
+                fighterOne = tablerowseven[i].find('th').find('a').find('span').contents[0]
+                lineOne = tablerowseven[i].find('td').find('a').find('span').find('span').contents[0]
+            if tablerowsodd[i].find('th').find('a').find('span') is not None:
+               fighterTwo = tablerowsodd[i].find('th').find('a').find('span').contents[0]
+               lineTwo = tablerowsodd[i].find('td').find('a').find('span').find('span').contents[0]
+
+            fights.append(Match(fighterOne, fighterTwo, convertToOdds(lineOne), convertToOdds(lineTwo)))
+
+
+            #print tablerow.find('th').find('a').find('span').contents[0]
+    except:
+        print '\t Error in getFights parsing tablesoup'
 
     return fights
 
@@ -256,6 +257,7 @@ def getWikiFightResults(url):
 
 #Assumes that the first event hit on search is the correct one
 def getEventPageFromName(eventName):
+    eventName = eventName.encode('utf-8')
     query = urllib.quote_plus(eventName)
     url = 'http://www.bestfightodds.com/search?query='
     url+=query
@@ -291,10 +293,10 @@ def getEventDataByName(eventName):
     fights =getfights(0,tablesoup)
     return fights
 
-def dumpEventTableToFile():
-    table = getWikiFightByName()[0]
+def dumpEventTableToFile(file):
 
-    pickle.dump(table,open('table.p','wb'))
+
+    pickle.dump(file,open('table.p','wb'))
 
 def fetchEvenTableFromFile():
      return pickle.load( open( "table.p", "rb" ) )
@@ -315,3 +317,20 @@ def joinResultAndLines(fights, winnerLoser):
 
     return fights
 #dumpEventTableToFile()
+
+def makeAll():
+    events = getWikiFightByName()
+    for i in range(18,20):
+        event = events[i]
+        print event.name
+        wlobjs = getWikiFightResults(event.site)
+
+        data =getEventDataByName(event.name)
+        result = joinResultAndLines(data,wlobjs)
+    return events
+
+#event = makeAll()
+
+#conn = sqlite3.connect('example.db')
+
+

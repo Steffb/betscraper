@@ -6,11 +6,15 @@ import unittest
 import fetcher
 import datetime
 from Objects import *
+import pandas as pd
+import dill
+import json
 
 class MyTestCase(unittest.TestCase):
 
     def test_something(self):
         self.assertEqual(True, True)
+
 
 
     def test_pageFetching(self):
@@ -62,6 +66,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(datetime.date(2009,1,31), fetcher.convertMmaDateToWikiDate('Jan 31st 2009'))
         self.assertEqual(datetime.date(2013,2,2), fetcher.convertMmaDateToWikiDate('Feb 2nd 2013'))
 
+    @unittest.skip
     def testGetWikiEvents(self):
         events = fetcher.getWikiFightByName()
 
@@ -163,6 +168,25 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(1.17 ,m1.fighterTwoLine)
 
 
+    unittest.ig
+    def testtextXml(self):
+        events = fetcher.getWikiFightByName()
+
+        event = events[0]
+        print event.name
+        wlobjs = fetcher.getWikiFightResults(event.site)
+
+        data =fetcher.getEventDataByName(event.name)
+        result = fetcher.joinResultAndLines(data,wlobjs)
+        print 'done'
+        dill.dump_session('dill.pkl')
+        #fetcher.dumpEventTableToFile(result)
+
+    def testJson(self):
+
+        wl = WinnerLoser('one','two')
+        ww = dill.dump_session('dill.pkl')
+        print ww
 
 if __name__ == '__main__':
     unittest.main()

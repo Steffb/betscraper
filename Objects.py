@@ -1,5 +1,6 @@
 __author__ = 'steffenfb'
 
+from json import JSONEncoder
 import datetime
 class Event(object):
     site = ''
