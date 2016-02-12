@@ -8,7 +8,9 @@ import misc
 # Used for fetching the page content
 import sqlite3
 from difflib import SequenceMatcher
+import os
 
+from saveObject import transformEvent,transformMatches,xAll
 
 def useLocalHTMLFile():
 
@@ -263,10 +265,12 @@ def getEventPageFromName(eventName):
     url+=query
     #print 'current url is :%s'%(url)
     content = getContentFromURL(url)[0]
+
     soup = createSoups(content)[2]
     tables = soup.findAll('table',{'class':'content-list'})
     table = None
     # Find event table
+
     for t in tables:
 
         if(len(t.find('td',{'class':'content-list-date'}).contents) is not 0):
@@ -287,19 +291,19 @@ def getEventPageFromName(eventName):
 
 
 def getEventDataByName(eventName):
+    query =getEventPageFromName(eventName)
+    if not (query):
+        return None
+    content = getContentFromURL('http://www.bestfightodds.com'+query[1])
 
-    content = getContentFromURL('http://www.bestfightodds.com'+getEventPageFromName(eventName)[1])[0]
-    tablesoup = createSoups(content)[1]
-    fights =getfights(0,tablesoup)
-    return fights
+    if (content):
+        content = content[0]
+        tablesoup = createSoups(content)[1]
+        fights =getfights(0,tablesoup)
+        return fights
+    else:
+        return None
 
-def dumpEventTableToFile(file):
-
-
-    pickle.dump(file,open('table.p','wb'))
-
-def fetchEvenTableFromFile():
-     return pickle.load( open( "table.p", "rb" ) )
 
 
 def joinResultAndLines(fights, winnerLoser):
@@ -318,19 +322,54 @@ def joinResultAndLines(fights, winnerLoser):
     return fights
 #dumpEventTableToFile()
 
+
 def makeAll():
     events = getWikiFightByName()
-    for i in range(18,20):
+    eventsWwinner = []
+    #for i in range(190,len(events)):
+    for i in range(191,192):
+
         event = events[i]
-        print event.name
+        print '[%s]\t%s'%(i,event.name)
         wlobjs = getWikiFightResults(event.site)
 
         data =getEventDataByName(event.name)
-        result = joinResultAndLines(data,wlobjs)
-    return events
+        if(data and wlobjs):
+            result = joinResultAndLines(data,wlobjs)
+            event.match = result
+        eventsWwinner.append(event)
 
-#event = makeAll()
+    return eventsWwinner
 
-#conn = sqlite3.connect('example.db')
+def clear():
+    os.system('clear')
+
+
+print '[starting fetching online]'
+events = makeAll()
+aa = events
+
+
+
+print '[Fetched all data]'
+
+for i in range(len(events)):
+
+    events[i] = transformMatches(events[i])
+
+print '[transformed all matches]'
+for i in range(len(events)):
+
+    events[i] = transformEvent(events[i])
+
+print '[transformed all events]'
+xall = xAll(eventList = events)
+xmlreadyEvents = xall.render()
+file = open('bigobj','w')
+file.write(str(xmlreadyEvents))
+file.close()
+
+print '[written to file and done ! '
+
 
 

@@ -11,11 +11,6 @@ from dexml import fields
 
 
 
-
-
-
-
-
 class xMatch(dexml.Model):
 
     fighterOneName = fields.String()
@@ -35,6 +30,10 @@ class xWinnerLoser(dexml.Model):
     loser = fields.String()
 
 
+class xAll(dexml.Model):
+    eventList = fields.List(xEvent)
+
+
 match = xMatch(fighterOneName='mrloser', fighterOneLine=1, fighterTwoName='mrloser', fighterTwoLine=2, fightWinnerWinner='mrwinner')
 matches = []
 matches.append(match)
@@ -52,3 +51,40 @@ match = obj.match
 
 print match[0].fighterOneName
 
+def transformMatches(EventObject):
+
+    for i in range(len(EventObject.match)):
+        current = EventObject.match[i]
+        EventObject.match[i] =  xMatch(fighterOneName = current.fighterOneName, fighterOneLine =current.fighterOneLine, fighterTwoName = current.fighterTwoName,
+                                       fighterTwoLine=current.fighterTwoLine, fightWinnerWinner = current.fightWinnerWinner)
+
+    return EventObject
+
+def transformEvent(eventObject):
+    xmlEvent = xEvent(site = eventObject.site ,name = eventObject.name)
+
+    for match in eventObject.match:
+        xmlEvent.match.append(match)
+
+    return xmlEvent
+
+
+match = Match(fighterOneName='f1n',fighterOneLine=1,fighterTwoLine=2,fighterTwoName='f2n')
+match.fightWinnerWinner =   'fw1'
+event = Event('site','name','ji')
+
+
+event.match.append(match)
+print event.match[0].fighterOneName
+event = transformMatches(event)
+
+event = transformEvent(event)
+
+
+
+xml = event.render()
+
+print xml
+
+
+ee = xEvent.parse(xml)

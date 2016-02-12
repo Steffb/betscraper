@@ -1,0 +1,12 @@
+<?xml version="1.0" ?><xAll>
+<xEvent site="https://en.wikipedia.org/wiki/UFC_Fight_Night:_Marquardt_vs._Palhares" name="UFC Fight Night: Marquardt vs. Palhares">
+<xMatch fighterOneName="Nate Marquardt" fighterOneLine="1.43" fighterTwoName="Rousimar Palhares" fighterTwoLine="3.15" fightWinnerWinner="Nate Marquardt" />
+<xMatch fighterOneName="Gleison Tibau" fighterOneLine="2.15" fighterTwoName="Jim Miller" fighterTwoLine="1.8" fightWinnerWinner="Jim Miller" />
+<xMatch fighterOneName="Cole Miller" fighterOneLine="2.9" fighterTwoName="Ross Pearson" fighterTwoLine="1.48" fightWinnerWinner="Cole Miller" />
+<xMatch fighterOneName="Charles Oliveira" fighterOneLine="2.45" fighterTwoName="Efrain Escudero" fighterTwoLine="1.65" fightWinnerWinner="Charles Oliveira" />
+<xMatch fighterOneName="Dave Branch" fighterOneLine="2.35" fighterTwoName="Tomasz Drwal" fighterTwoLine="1.65" fightWinnerWinner="" />
+<xMatch fighterOneName="John Gunderson" fighterOneLine="1.8" fighterTwoName="Yves Edwards" fighterTwoLine="2.05" fightWinnerWinner="Yves Edwards" />
+<xMatch fighterOneName="Rafael Natal" fighterOneLine="1.51" fighterTwoName="Rich Attonito" fighterTwoLine="2.68" fightWinnerWinner="Rich Attonito" />
+<xMatch fighterOneName="Jared Hamman" fighterOneLine="1.54" fighterTwoName="Kyle Kingsbury" fighterTwoLine="2.6" fightWinnerWinner="Kyle Kingsbury" />
+<xMatch fighterOneName="Brian Foster" fighterOneLine="1.42" fighterTwoName="Forrest Petz" fighterTwoLine="3.0" fightWinnerWinner="Brian Foster" />
+<xMatch fighterOneName="Anthony Waldburger" fighterOneLine="2.4" fighterTwoName="David Mitchell" fighterTwoLine="1.62" fightWinnerWinner="" /></xEvent></xAll>

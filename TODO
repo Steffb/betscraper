@@ -1,0 +1,12 @@
+
+
+UFC 119: Mir vs. Cro Cop
+Did not find table
+Traceback (most recent call last):
+  File "/Users/steffenfb/PycharmProjects/betscraper/fetcher.py", line 334, in <module>
+    print '[starting fetching online]'
+  File "/Users/steffenfb/PycharmProjects/betscraper/fetcher.py", line 329, in makeAll
+
+  File "/Users/steffenfb/PycharmProjects/betscraper/fetcher.py", line 292, in getEventDataByName
+    content = getContentFromURL('http://www.bestfightodds.com'+getEventPageFromName(eventName)[1])[0]
+TypeError: 'NoneType' object has no attribute '__getitem__'
