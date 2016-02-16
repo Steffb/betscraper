@@ -31,7 +31,7 @@ def printOutEvent(obj):
 
 def betEqualOnUnderdogOnEvent(obj):
 
-    profit = 1
+    profit = 0
 
     wins = 0
     loss= 0
@@ -59,7 +59,40 @@ def betEqualOnUnderdogOnEvent(obj):
     print '[Your losses]'+ str(loss)
     print '[Total evals ]'+ str(evals)
 
-print betEqualOnUnderdogOnEvent(obj)
+def betEqualOnFavoriteOnEvent(obj):
+
+    profit = 0
+
+    wins = 0
+    loss= 0
+    evals = 0
+    for event in obj.eventList:
+        for match in event.match:
+
+            if(match.fightUnderdog()):
+                evals+=1
+                if(match.getFightWinner() == match.fightUnderdog()[0]):
+                    profit -=1
+                    loss+=1
+
+
+                 #   print 'correct'
+                elif(match.getFightLoser() == match.fightUnderdog()[0]):
+                    profit +=match.fightFavorite()[1]
+                    wins+=1
+                #else:
+
+               #     print 'wrong'
+
+                #print 'status: '+str(profit)
+
+    print '[Your profit] '+str(profit)
+    print '[Your Wins] '+ str(wins)
+    print '[Your losses]'+ str(loss)
+    print '[Total evals ]'+ str(evals)
+
+#print betEqualOnUnderdogOnEvent(obj)
+print betEqualOnFavoriteOnEvent(obj)
 
 
 

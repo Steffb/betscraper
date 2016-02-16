@@ -32,6 +32,19 @@ class xMatch(dexml.Model):
         else:
             return None
 
+    def fightFavorite(self):
+
+        if(self.fighterOneLine < self.fighterTwoLine ):
+            return self.fighterOneName,self.fighterOneLine
+
+        elif(self.fighterTwoLine < self.fighterOneLine):
+
+
+            return self.fighterTwoName,self.fighterTwoLine
+
+        else:
+            return None
+
 
     def getFightWinner(self):
         return self.fightWinnerWinner
