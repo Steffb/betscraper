@@ -10,3 +10,11 @@ Traceback (most recent call last):
   File "/Users/steffenfb/PycharmProjects/betscraper/fetcher.py", line 292, in getEventDataByName
     content = getContentFromURL('http://www.bestfightodds.com'+getEventPageFromName(eventName)[1])[0]
 TypeError: 'NoneType' object has no attribute '__getitem__'
+
+
+
+
+Does not have a winner ??
+Dave Branch	3.1
+	Gerald Harris	1.4
+	[Winnter]

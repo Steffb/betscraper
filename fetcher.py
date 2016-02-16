@@ -326,8 +326,8 @@ def joinResultAndLines(fights, winnerLoser):
 def makeAll():
     events = getWikiFightByName()
     eventsWwinner = []
-    #for i in range(190,len(events)):
-    for i in range(191,192):
+    for i in range(190,len(events)):
+    #for i in range(191,196):
 
         event = events[i]
         print '[%s]\t%s'%(i,event.name)
@@ -344,32 +344,38 @@ def makeAll():
 def clear():
     os.system('clear')
 
+def runFetching():
 
-print '[starting fetching online]'
-events = makeAll()
-aa = events
-
-
-
-print '[Fetched all data]'
-
-for i in range(len(events)):
-
-    events[i] = transformMatches(events[i])
-
-print '[transformed all matches]'
-for i in range(len(events)):
-
-    events[i] = transformEvent(events[i])
-
-print '[transformed all events]'
-xall = xAll(eventList = events)
-xmlreadyEvents = xall.render()
-file = open('bigobj','w')
-file.write(str(xmlreadyEvents))
-file.close()
-
-print '[written to file and done ! '
+    print '[starting fetching online]'
+    events = makeAll()
+    aa = events
 
 
+
+    print '[Fetched all data]'
+
+    for i in range(len(events)):
+
+        events[i] = transformMatches(events[i])
+
+    print '[transformed all matches]'
+    for i in range(len(events)):
+
+        events[i] = transformEvent(events[i])
+
+    print '[transformed all events]'
+    xall = xAll(eventList = events)
+    xmlreadyEvents = xall.render()
+    file = open('bigobj','w')
+
+
+    #xmlreadyEvents = xmlreadyEvents.replace(u'\xa0', u' ')
+    xmlreadyEvents = xmlreadyEvents.encode('ascii','ignore')
+
+    file.write(xmlreadyEvents)
+    file.close()
+
+    print '[written to file and done ! '
+
+runFetching()
 

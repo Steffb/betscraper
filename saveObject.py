@@ -14,10 +14,36 @@ from dexml import fields
 class xMatch(dexml.Model):
 
     fighterOneName = fields.String()
-    fighterOneLine = fields.Integer()
+    fighterOneLine = fields.Float()
     fighterTwoName = fields.String()
-    fighterTwoLine = fields.Integer()
+    fighterTwoLine = fields.Float()
     fightWinnerWinner = fields.String()
+
+    def fightUnderdog(self):
+
+        if(self.fighterOneLine > self.fighterTwoLine ):
+            return self.fighterOneName,self.fighterOneLine
+
+        elif(self.fighterTwoLine > self.fighterOneLine):
+
+
+            return self.fighterTwoName,self.fighterTwoLine
+
+        else:
+            return None
+
+
+    def getFightWinner(self):
+        return self.fightWinnerWinner
+
+    def getFightLoser(self):
+
+        if(self.fighterOneName != self.fightWinnerWinner):
+            return self.fighterOneName
+        elif(self.fighterTwoName != self.fightWinnerWinner):
+            return self.fighterTwoName
+        else:
+            return None
 
 class xEvent(dexml.Model):
     site = fields.String()
@@ -88,3 +114,4 @@ print xml
 
 
 ee = xEvent.parse(xml)
+

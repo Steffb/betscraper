@@ -9,6 +9,7 @@ from Objects import *
 import pandas as pd
 import dill
 import json
+from saveObject import xMatch
 
 class MyTestCase(unittest.TestCase):
 
@@ -168,7 +169,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(1.17 ,m1.fighterTwoLine)
 
 
-    unittest.ig
+
     def testtextXml(self):
         events = fetcher.getWikiFightByName()
 
@@ -187,6 +188,11 @@ class MyTestCase(unittest.TestCase):
         wl = WinnerLoser('one','two')
         ww = dill.dump_session('dill.pkl')
         print ww
+
+
+    def testXmatchfightUnderdog(self):
+        match = xMatch(fighterOneName='f1n',fighterOneLine=1,fighterTwoLine=2,fighterTwoName='f2n')
+        self.assertEqual(match.fighterTwoName, match.fightUnderdog()[0])
 
 if __name__ == '__main__':
     unittest.main()
