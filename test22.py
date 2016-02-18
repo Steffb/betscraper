@@ -10,6 +10,7 @@ import pandas as pd
 import dill
 import json
 from saveObject import xMatch
+import objectQuery
 
 class MyTestCase(unittest.TestCase):
 
@@ -170,19 +171,6 @@ class MyTestCase(unittest.TestCase):
 
 
 
-    def testtextXml(self):
-        events = fetcher.getWikiFightByName()
-
-        event = events[0]
-        print event.name
-        wlobjs = fetcher.getWikiFightResults(event.site)
-
-        data =fetcher.getEventDataByName(event.name)
-        result = fetcher.joinResultAndLines(data,wlobjs)
-        print 'done'
-        dill.dump_session('dill.pkl')
-        #fetcher.dumpEventTableToFile(result)
-
     def testJson(self):
 
         wl = WinnerLoser('one','two')
@@ -193,6 +181,25 @@ class MyTestCase(unittest.TestCase):
     def testXmatchfightUnderdog(self):
         match = xMatch(fighterOneName='f1n',fighterOneLine=1,fighterTwoLine=2,fighterTwoName='f2n')
         self.assertEqual(match.fighterTwoName, match.fightUnderdog()[0])
+
+
+    def testBetOnFavoriteOnOneEvent(self):
+
+
+        obj = objectQuery.readxAll('bigobj')
+
+        for event in obj.eventList:
+            if('Marquardt vs. Palhares' in event.name):
+                result = objectQuery.betonFavoriteOnOneEvent(event)
+
+                wins=result[0]
+                loss=result[1]
+                profit=result[2]
+                evals=result[3]
+
+        self.assertEqual(3,wins)
+
+
 
 if __name__ == '__main__':
     unittest.main()

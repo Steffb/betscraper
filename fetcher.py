@@ -326,7 +326,7 @@ def joinResultAndLines(fights, winnerLoser):
 def makeAll():
     events = getWikiFightByName()
     eventsWwinner = []
-    for i in range(190,len(events)):
+    for i in range(0,len(events)):
     #for i in range(191,196):
 
         event = events[i]
@@ -377,5 +377,5 @@ def runFetching():
 
     print '[written to file and done ! '
 
-runFetching()
+#runFetching()
 
