@@ -9,7 +9,7 @@ from Objects import *
 import pandas as pd
 import dill
 import json
-from saveObject import xMatch
+from saveObject import xMatch,xEvent,xAll
 import objectQuery
 
 class MyTestCase(unittest.TestCase):
@@ -198,6 +198,21 @@ class MyTestCase(unittest.TestCase):
                 evals=result[3]
 
         self.assertEqual(3,wins)
+
+
+    def testBetScopeRange(self):
+
+        match = xMatch(fighterOneName='mrwinner', fighterOneLine=1, fighterTwoName='mrloser', fighterTwoLine=2, fightWinnerWinner='mrwinner')
+
+        event = xEvent(site= 'www.abc.com', name = 'yeye')
+
+        event.match.append(match)
+        eventlist = []
+        eventlist.append(event)
+        obj = xAll(eventList = eventlist)
+        res = objectQuery.scopeBetRange(obj,0.9,1.1)
+
+        self.assertEqual(1,res)
 
 
 

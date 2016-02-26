@@ -51,12 +51,16 @@ class xMatch(dexml.Model):
 
     def getFightLoser(self):
 
-        if(self.fighterOneName == self.fightWinnerWinner):
-            return self.fighterTwoName
-        elif(self.fighterTwoName == self.fightWinnerWinner):
-            return self.fighterOneName
-        else:
-            return None
+        if(self.fightWinnerWinner != ''):
+
+            if(self.fighterOneName == self.fightWinnerWinner):
+                return self.fighterTwoName
+            elif(self.fighterTwoName == self.fightWinnerWinner):
+                return self.fighterOneName
+            else:
+                return None
+        return None
+
 
 class xEvent(dexml.Model):
     site = fields.String()

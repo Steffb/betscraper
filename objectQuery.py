@@ -5,7 +5,6 @@ from saveObject import xAll
 
 
 
-
 def readxAll(filename):
     file  = open(filename,'r')
     xml = file.read()
@@ -64,6 +63,32 @@ def betEqualOnUnderdogOnEvent(obj):
     print '[Your Wins] '+ str(wins)
     print '[Your losses]'+ str(loss)
     print '[Total evals ]'+ str(evals)
+
+    # Used to get win probability within a range of odds
+def scopeBetRange(obj, bottom, top):
+
+    totalEval = 0
+    totalWin = 0
+
+    for event in obj.eventList:
+        for match in event.match:
+
+            if(bottom <=match.fighterOneLine and match.fighterOneLine <=top ):
+                if(match.fighterOneName == match.getFightWinner()):
+                    totalEval+=1
+                    totalWin+=1
+                elif(match.fighterOneName == match.getFightLoser()):
+                    totalEval+=1
+
+            if(bottom <=match.fighterTwoLine and match.fighterTwoLine <=top ):
+                if(match.fighterTwoName == match.getFightWinner()):
+                    totalEval+=1
+                    totalWin+=1
+                elif(match.fighterTwoName == match.getFightLoser()):
+                    totalEval+=1
+
+    return totalWin/totalEval
+
 
 
 def betonFavoriteOnOneEvent(event):
@@ -135,7 +160,9 @@ def betEqualOnFavoriteOnEvent(obj):
 obj = readxAll('bigobj')
 #print betEqualOnFavoriteOnEvent(obj)
 
-print betEqualOnUnderdogOnEvent(obj)
+#print betEqualOnUnderdogOnEvent(obj)
+
+print 'winning prob is '+str(scopeBetRange(obj,2,2.5))
 
 
 
